@@ -1,0 +1,93 @@
+<h1><%= title %></h1>
+
+<script>
+
+$(function(){
+	$('.api_request').bind('click',getApiRequest);
+	
+	//$('#transfer').bind('click',transfer);
+	//$('#createAccount').bind('click',createAccount);
+	//$('#updateAccount').bind('click',updateAccount);
+
+	$('.encrypt').bind('click',function(){
+		if($(this).is(':checked') == true) {
+			var $memo_key = $(this).parent().find('.memo_key');
+			$memo_key.val("");
+			$memo_key.show();
+		}else {
+			var $memo_key = $(this).parent().find('.memo_key');
+			$memo_key.val("");
+			$memo_key.hide();
+		}
+	});
+});
+
+function getApiRequest(){
+	var api = $(this).attr('id');
+	var $form = $('#'+$(this).parent().parent().attr('id'));
+
+	var url = "/api/"+api;
+	var data = $form.serialize();
+	
+	$.ajax({
+		method : 'post',
+		type : 'post',
+		url:url,
+		dataType : 'json',
+		data: data,
+		success : function(data){
+			console.log(data);
+			initAjaxLog();
+			$form.find('p').html(JSON.stringify(data));
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+			console.log(xhr.responseText);
+			alert(xhr.responseText);
+		},
+		complete: function (jqXHR,textStatus ) {
+		
+		}
+	});
+}
+
+function initAjaxLog(){
+	$('p').html('');
+}
+
+</script>
+<div id="left">
+	<ul>
+		<li>/api/get_reward_turn_list<br/> post from=(string)&limit=(string)</li>
+        <li>/api/get_mining_accounts<br/></li>
+	</ul>
+</div>
+
+<div id="main">
+
+	<div>
+		<form id="form_get_reward_turn_list" onsubmit="return false;">
+			<fieldset>
+				<legend>get_reward_turn_list</legend>
+				<input type="text" name="from" placeholder="from, -1 is first"/>
+				<input type="text" name="limit" placeholder="limit"/>
+				<input type="button" id="get_reward_turn_list" value="get_reward_turn_list" class="btn-info btn-md api_request"/>
+			</fieldset>
+			<p></p>
+		</form>
+		
+	</div>
+
+    <div>
+		<form id="form_get_mining_accounts" onsubmit="return false;">
+			<fieldset>
+				<legend>get_mining_accounts</legend>
+				<input type="text" name="from" placeholder="from, 0 is first"/>
+				<input type="text" name="limit" placeholder="limit"/>
+				<input type="button" id="get_mining_accounts" value="get_mining_accounts" class="btn-info btn-md api_request"/>
+			</fieldset>
+			<p></p>
+		</form>
+	</div>
+
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+</div>
